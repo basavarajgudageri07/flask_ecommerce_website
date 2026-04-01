@@ -1,20 +1,139 @@
-# templates/home.html
-"""
 <!DOCTYPE html>
 <html>
 <head>
     <title>SquareWave Essentials</title>
 </head>
-<body>
-    <h1>Welcome to SquareWave Essentials</h1>
-    <a href="/login">Login</a> | <a href="/register">Register</a>
-    <h2>Products</h2>
-    {% for p in products %}
-        <div>
-            <h3>{{p[1]}}</h3>
-            <p>Price: {{p[2]}}</p>
+
+<body style="font-family:Arial; margin:0;">
+
+<!-- 🔐 LOGIN MODAL -->
+<div id="loginModal" style="
+    display: {% if not user %}flex{% else %}none{% endif %};
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+">
+
+    <div style="display:flex; width:600px; background:white; border-radius:10px; overflow:hidden; position:relative;">
+
+        <!-- ❌ CLOSE BUTTON -->
+        <span onclick="closeModal()" 
+              style="
+                position:absolute; 
+                top:10px; 
+                right:15px; 
+                cursor:pointer; 
+                font-size:20px;
+                font-weight:bold;
+              ">
+            ✖
+        </span>
+
+        <!-- LEFT PANEL -->
+        <div style="width:50%; background:#2874f0; color:white; padding:20px;">
+            <h2>SquareWave</h2>
+            <p>Login to explore amazing products</p>
         </div>
-    {% endfor %}
+
+        <!-- RIGHT PANEL -->
+        <div style="width:50%; padding:20px;">
+
+            <h3>Login</h3>
+
+            <form method="POST" action="/login">
+                <input type="text" name="email" placeholder="Email"
+                       style="width:100%; padding:8px; margin-bottom:10px;"><br>
+
+                <input type="password" name="password" placeholder="Password"
+                       style="width:100%; padding:8px; margin-bottom:10px;"><br>
+
+                <button style="width:100%; padding:10px; background:#2874f0; color:white; border:none;">
+                    Login
+                </button>
+            </form>
+
+            <br>
+
+            <a href="/register">New user? Sign up</a>
+
+        </div>
+    </div>
+</div>
+
+<!-- 🔵 NAVBAR -->
+<div style="background:#2874f0; padding:10px; color:white; display:flex; align-items:center;">
+
+    <h2 style="margin-right:20px;">SquareWave</h2>
+
+    <!-- 🔍 Search -->
+    <input type="text" placeholder="Search for products..."
+           style="width:40%; padding:8px; border-radius:3px; border:none;">
+
+    <!-- 👤 Login/Register -->
+    <div style="margin-left:auto;">
+        {% if user %}
+            Welcome {{ user }} |
+            <a href="/logout" style="color:white;">Logout</a>
+        {% else %}
+            <a href="/login" style="color:white;">Login</a> |
+            <a href="/register" style="color:white;">Register</a>
+        {% endif %}
+    </div>
+
+    <!-- 🛒 Cart -->
+    <div style="margin-left:20px;">
+        <a href="/cart" style="color:white;">Cart</a>
+    </div>
+
+</div>
+
+<!-- 🧭 CATEGORY BAR -->
+<div style="display:flex; justify-content:space-around; padding:10px; background:#f1f1f1;">
+    <span>Shoes</span>
+    <span>Dress</span>
+    <span>Mobiles</span>
+    <span>Laptops</span>
+    <span>Perfumes</span>
+    <span>Books</span>
+    <span>Electronics</span>
+    <span>Sports</span>
+</div>
+
+<!-- 🎯 BANNER -->
+<div style="padding:20px;">
+    <img src="{{ url_for('static', filename='images/mobile.jpg') }}"
+         style="width:100%; height:250px; object-fit:cover;">
+</div>
+
+<!-- 🛍️ PRODUCTS -->
+<div style="display:flex; flex-wrap:wrap; padding:10px;">
+
+{% for p in products %}
+<div style="width:200px; margin:10px; padding:10px; border:1px solid #ccc; text-align:center;">
+
+    <img src="{{ url_for('static', filename='images/' + p[4]) }}"
+         width="150" height="150">
+
+    <h4>{{ p[1] }}</h4>
+    <p>₹{{ p[2] }}</p>
+
+    <a href="/add/{{ p[0] }}">Add to Cart</a>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- JS -->
+<script>
+function closeModal() {
+    document.getElementById("loginModal").style.display = "none";
+}
+</script>
+
 </body>
 </html>
-"""
